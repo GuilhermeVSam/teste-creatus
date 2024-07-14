@@ -5,9 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '../schemas/user.schema';
 import { ApiOperation } from '@nestjs/swagger';
-import * as json2csv from 'json2csv';
-import { promises as fs } from 'fs';
-import { createReadStream } from 'fs';
+import { parse } from 'json2csv';
 
 @Injectable()
 export class UsersService {
@@ -28,6 +26,7 @@ export class UsersService {
 
   @ApiOperation({ summary: 'Lista todos os usuários cadastrados' })
   findAll() {
+    console.log('here');
     return this.userModel.find().exec();
   }
 
@@ -62,12 +61,22 @@ export class UsersService {
 
   @ApiOperation({ summary: 'Gera um relatório de usuários' })
   async generateReport() {
-    const columns = ['id', 'name', 'email', 'level'];
-    const users = await this.userModel.find().select(columns.join(' ')).exec();
-    const opts = { columns };
-    const csv = json2csv.parse(users, opts);
-    const filePath = './temp/users-report.csv';
-    await fs.writeFile(filePath, csv);
-    return createReadStream(filePath);
+    try {
+      const users = await this.userModel
+        .find({}, { id: 1, name: 1, email: 1 })
+        .lean()
+        .exec();
+      const fields = [
+        { label: 'ID', value: 'id' },
+        { label: 'Nome', value: 'name' },
+        { label: 'Email', value: 'email' },
+      ];
+
+      const csv = parse(users, { fields });
+      return csv;
+    } catch (error) {
+      console.error('Error generating report:', error);
+      throw error;
+    }
   }
 }

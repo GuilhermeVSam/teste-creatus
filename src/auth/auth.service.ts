@@ -23,4 +23,11 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
+
+  validate(payload) {
+    return {
+      userId: payload.sub,
+      email: payload.email,
+    };
+  }
 }

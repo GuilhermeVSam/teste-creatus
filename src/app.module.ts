@@ -2,14 +2,22 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
-    MongooseModule.forRoot(
-      'mongodb+srv://guiwojtysiak:wojtysiak05@testecreatus.km9w3yz.mongodb.net/?retryWrites=true&w=majority&appName=testeCreatus',
-    ),
+    MongooseModule.forRoot('localhost:27017'), //preencher com o banco de dados
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
   ],
 })
 export class AppModule {}
