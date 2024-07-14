@@ -31,15 +31,11 @@
     "@pdfme/common": "^4.0.2",
     "@pdfme/generator": "^4.0.2",
     "class-validator": "^0.14.1",
-    "csv-writer": "^1.6.0",
     "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "pdfkit": "^0.15.0",
-    "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
